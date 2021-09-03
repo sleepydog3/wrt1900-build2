@@ -43,8 +43,8 @@ git clone https://github.com/DevOpenWRT-Router/luci-app-netdata.git package/luci
 git clone https://github.com/DevOpenWRT-Router/luci-app-observatory.git package/luci-app-observatory
 ### luci-app-rtorrent-js
 git clone https://github.com/DevOpenWRT-Router/luci-app-rtorrent-js.git package/luci-app-rtorrent-js
-### luci-app-autowms
-git clone https://github.com/DevOpenWRT-Router/luci-app-autowms.git package/luci-app-autowms
+### luci-app-autowms -> removed fordependency to wolfssl
+#git clone https://github.com/DevOpenWRT-Router/luci-app-autowms.git package/luci-app-autowms
 
 ### luci-app-tn-ttyd DO NOT USE
 # git clone https://github.com/DevOpenWRT-Router/luci-app-tn-ttyd.git package/luci-app-tn-ttyd

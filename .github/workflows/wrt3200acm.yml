@@ -207,6 +207,7 @@ jobs:
         run: |          
           cd openwrt
           rm -rf package/kernel/{mac80211,ath10k-ct,mt76,rtl8812au-ct}
+          git checkout d1100c76b33ff68c6db0f5fa31a26532bdbb15c4 -- package/kernel/{mac80211,ath10k-ct,mt76,rtl8812au-ct}
 ### ------------------------------------------------------------------------------ ###
       - name: Load custom feeds
         run: >

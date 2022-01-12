@@ -176,8 +176,6 @@ jobs:
       - name: Set source and branch
         id: setSource
         run: |
-#                  echo "::set-output name=sourceString::https://github.com/openwrt/openwrt.git"
-#                  echo "::set-output name=branchString::master"
 		  echo "::set-output name=sourceString::https://github.com/openwrt/openwrt.git"
                   echo "::set-output name=branchString::v21.02.1" 
 

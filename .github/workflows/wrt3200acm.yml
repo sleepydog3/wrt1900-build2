@@ -203,7 +203,6 @@ jobs:
           git log --pretty=oneline -n 1
 ### ------------------------------------------------------------------------------ ###
       - name: Do the directory surgery that replaces the current mac80211 setup with the old 5.7.5 setup
-        if: !cancelled()
         run: |          
           cd openwrt
           rm -rf package/kernel/{mac80211,ath10k-ct,mt76,rtl8812au-ct}

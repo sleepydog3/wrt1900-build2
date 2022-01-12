@@ -163,6 +163,12 @@ jobs:
                   echo "HARDWARE_DEVICE=wrt3200acm" >> $GITHUB_ENV
 
 ### ------------------------------------------------------------------------------ ###
+      - name: Set source and branch
+        id: setSource
+        run: | 
+              echo "Placeholder"
+              
+### ------------------------------------------------------------------------------ ###
       - name: Set SSH connection to Actions
         id: setSSH
         run: |

@@ -176,8 +176,10 @@ jobs:
       - name: Set source and branch
         id: setSource
         run: |
-                  echo "::set-output name=sourceString::https://github.com/openwrt/openwrt.git"
-                  echo "::set-output name=branchString::master"
+#                  echo "::set-output name=sourceString::https://github.com/openwrt/openwrt.git"
+#                  echo "::set-output name=branchString::master"
+		  echo "::set-output name=sourceString::https://github.com/openwrt/openwrt.git"
+                  echo "::set-output name=branchString::v21.02.1" 
 
 ### ------------------------------------------------------------------------------ ###
       - name: Clone source code
@@ -189,6 +191,14 @@ jobs:
           steps.setSource.outputs.branchString }} openwrt
 
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+### ------------------------------------------------------------------------------ ###
+      - name: Do the directory surgery that replaces the current mac80211 setup with the old 5.7.5 setup.
+        if: env.RUN_BEFORE_BUILD == 'true' && !cancelled()
+        run: |
+	  cd openwrt
+          rm -rf package/kernel/{mac80211,ath10k-ct,mt76,rtl8812au-ct}
+	  git checkout d1100c76b33ff68c6db0f5fa31a26532bdbb15c4 -- package/kernel/{mac80211,ath10k-ct,mt76,rtl8812au-ct}
+	  rm -f package/kernel/mac80211/patches/ath/551-ath9k_ubnt_uap_plus_hsr.patch
 ### ------------------------------------------------------------------------------ ###
       - name: Before Build
         if: env.RUN_BEFORE_BUILD == 'true' && !cancelled()
@@ -342,38 +352,6 @@ jobs:
           chmod +x scripts/create_acl_for_luci.sh
           cd openwrt
           $GITHUB_WORKSPACE/scripts/create_acl_for_luci.sh -a
-### ------------------------------------------------------------------------------ ###
-      - name: Start SSH via tmate
-        uses: P3TERX/ssh2actions@main
-        if: >-
-          (env.SSH == 'true' && !cancelled() && env.SSH != 'false') ||
-          contains(github.event.action, 'ssh')
-      # Send connection info to Telegram (optional)
-      # You can find related documents here: https://core.telegram.org/bots
-        env:
-          TELEGRAM_BOT_TOKEN: '${{ secrets.TELEGRAM_BOT_TOKEN }}'
-          TELEGRAM_CHAT_ID: '${{ secrets.TELEGRAM_CHAT_ID }}'
-### ------------------------------------------------------------------------------ ###
-      - name: Start SSH via ngrok
-        uses: P3TERX/ssh2actions@main
-        if: >-
-          (env.SSH_NGROK == 'true' && !cancelled() && env.SSH_NGROK != 'false')
-          || contains(github.event.action, 'ssh')
-        with:
-          mode: ngrok
-      # After sign up on the https://ngrok.com
-      # You can find this token here: https://dashboard.ngrok.com/auth/your-authtoken
-        env:
-          NGROK_TOKEN: '${{ secrets.NGROK_TOKEN }}'
-      # ngrok server region [us, eu, au, ap, sa, jp, in] (optional, default: us)
-      # You can find this server region here: https://ngrok.com/docs#global-locations
-          NGROK_REGION: us
-      # This password you will use when authorizing via SSH
-          SSH_PASSWORD: '${{ secrets.SSH_PASSWORD }}'
-      # Send connection info to Telegram (optional)
-      # You can find related documents here: https://core.telegram.org/bots
-          TELEGRAM_BOT_TOKEN: '${{ secrets.TELEGRAM_BOT_TOKEN }}'
-          TELEGRAM_CHAT_ID: '${{ secrets.TELEGRAM_CHAT_ID }}'
 ### ------------------------------------------------------------------------------ ###
       - name: Populating .config
         id: config
@@ -552,16 +530,6 @@ jobs:
         with:
           name: 'OpenWrt_logs${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}'
           path: openwrt/logs/
-### ------------------------------------------------------------------------------ ###
-### ----- SSH CONNECTION AFTER BUILD ----- ###
-      - name: SSH connection to Actions After Build
-        uses: DevOpenWRT-Router/ssh2actions@v1.0.0
-        if: >-
-          (env.SSH_AFTERBUILD == 'true' && !cancelled() && env.SSH_AFTERBUILD !=
-          'false') || contains(github.event.action, 'ssh')
-        env:
-          TELEGRAM_CHAT_ID: '${{ secrets.TELEGRAM_CHAT_ID }}'
-          TELEGRAM_BOT_TOKEN: '${{ secrets.TELEGRAM_BOT_TOKEN }}'
 ### ------------------------------------------------------------------------------ ###
       - name: After Build
         if: env.RUN_AFTER_BUILD == 'true' && !cancelled()

@@ -163,12 +163,6 @@ jobs:
                   echo "HARDWARE_DEVICE=wrt3200acm" >> $GITHUB_ENV
 
 ### ------------------------------------------------------------------------------ ###
-      - name: Set source and branch
-        id: testPlaceholder
-        run: | 
-              echo "Placeholder"
-              
-### ------------------------------------------------------------------------------ ###
       - name: Set SSH connection to Actions
         id: setSSH
         run: |
@@ -207,6 +201,11 @@ jobs:
         run: |
           cd openwrt
           git log --pretty=oneline -n 1
+### ------------------------------------------------------------------------------ ###
+      - name: Do the directory surgery that replaces the current mac80211 setup with the old 5.7.5 setup
+        if: env.RUN_BEFORE_BUILD == 'true' && !cancelled()
+        run: |          
+              echo "Placeholder"          
 ### ------------------------------------------------------------------------------ ###
       - name: Load custom feeds
         run: >

@@ -164,7 +164,7 @@ jobs:
 
 ### ------------------------------------------------------------------------------ ###
       - name: Set source and branch
-        id: setSource
+        id: testPlaceholder
         run: | 
               echo "Placeholder"
               

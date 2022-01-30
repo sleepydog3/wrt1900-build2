@@ -290,10 +290,10 @@ jobs:
       - name: Run Custom OpenWRT Patches
         if: env.USE_OPENWRT_PATCHES == 'true' && !cancelled()
         run: |
-          mv configs/patches openwrt/patches
+##          mv configs/patches openwrt/patches
           cd openwrt
-          git am patches/*.patch
-          rm -rf patches
+##          git am patches/*.patch
+##          rm -rf patches
 ### ------------------------------------------------------------------------------ ###
       - name: Run Custom LUCI Patches
         if: env.USE_LUCI_PATCHES == 'true' && !cancelled()

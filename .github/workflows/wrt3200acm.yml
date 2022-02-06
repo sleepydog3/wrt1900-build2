@@ -208,53 +208,7 @@ jobs:
           rm -rf package/kernel/{mac80211,ath10k-ct,mt76,rtl8812au-ct}
           git checkout d1100c76b33ff68c6db0f5fa31a26532bdbb15c4 -- package/kernel/{mac80211,ath10k-ct,mt76,rtl8812au-ct}
           rm -f package/kernel/mac80211/patches/ath/551-ath9k_ubnt_uap_plus_hsr.patch
-### ------------------------------------------------------------------------------ ###
-      - name: Load custom feeds
-        run: >
-          [ -e configs/$FEEDS_CONF ] && mv configs/$FEEDS_CONF
-          openwrt/feeds.conf.default
 
-          chmod +x scripts/$DIY_P1_SH
-
-          cd openwrt
-
-          $GITHUB_WORKSPACE/scripts/$DIY_P1_SH
-### ------------------------------------------------------------------------------ ###
-      - name: Load LUCI custom Themes
-        if: env.USE_CUST_THEMES == 'true' && !cancelled()
-        run: |
-          chmod +x scripts/luci_themes.sh
-          cd openwrt
-          $GITHUB_WORKSPACE/scripts/luci_themes.sh
-### ------------------------------------------------------------------------------ ###
-      - name: Set LUCI Source
-        id: setLuci
-        run: |
-              cd openwrt
-              sed -i 's#/git.openwrt.org/project/luci.git#/git.openwrt.org/project/luci.git#g' feeds.conf.default
-              sed -i 's#/github.com/coolsnowwolf/luci#/git.openwrt.org/project/luci.git#g' feeds.conf.default
-
-### ------------------------------------------------------------------------------ ###
-      - name: Load DevOpenWRT-Router's Packages
-        if: env.USE_DEVOPENWRT == 'true' && !cancelled()
-        run: |
-          chmod +x scripts/DevOpenWRT-Router.sh
-          cd openwrt
-          $GITHUB_WORKSPACE/scripts/DevOpenWRT-Router.sh
-### ------------------------------------------------------------------------------ ###
-      - name: Load coolsnowwolf's Lean Packages
-        if: env.USE_COOLSNOWWOLF == 'true' && !cancelled()
-        run: |
-          chmod +x scripts/lean_packages.sh
-          cd openwrt
-          $GITHUB_WORKSPACE/scripts/lean_packages.sh
-### ------------------------------------------------------------------------------ ###
-      - name: Load Sirpdboy's Packages
-        if: env.USE_SIRPDBOY == 'true' && !cancelled()
-        run: |
-          chmod +x scripts/sirpdboy-package.sh
-          cd openwrt
-          $GITHUB_WORKSPACE/scripts/sirpdboy-package.sh
 ### ------------------------------------------------------------------------------ ###
       - name: Update feeds Package
         run: |

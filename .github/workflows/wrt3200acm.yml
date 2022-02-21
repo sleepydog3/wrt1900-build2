@@ -30,8 +30,8 @@ env:
   EXT_INIT_ENV: environment.sh
   USE_FILES: true
   USE_DIYP2: true
-  USE_CUST_THEMES: true
-  USE_OPENWRT_PATCHES: true
+  USE_CUST_THEMES: false
+  USE_OPENWRT_PATCHES: false
   USE_LUCI_PATCHES: false
   USE_PACKAGES_PATCHES: false
   USE_DEVOPENWRT: true

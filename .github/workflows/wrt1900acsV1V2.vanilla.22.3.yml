@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: wrt1900acs (Linksys Devices) vanilla
+name: wrt1900acs (Linksys Devices) vanilla 22.3
 
 on:
   repository_dispatch:

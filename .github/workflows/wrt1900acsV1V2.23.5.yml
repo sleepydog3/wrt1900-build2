@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: wrt1900acs (Linksys Devices) vanilla 22.3
+name: wrt1900acs (Linksys Devices) vanilla 23.5
 
 on:
   repository_dispatch:
@@ -24,7 +24,7 @@ env:
   REPO_BRANCH: main
   REPO_TAG: v23.05.0-rc3
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: configs/wrt1900acs.config
+  CONFIG_FILE: configs/wrt1900acsTest.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   UPLOAD_BIN_DIR: false

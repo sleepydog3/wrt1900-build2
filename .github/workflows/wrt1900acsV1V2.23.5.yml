@@ -73,7 +73,10 @@ jobs:
       run: cd openwrt && ./scripts/feeds install -a
 
     - name: Apply patches
-      run: cd openwrt && git am $PATCH_FILES/*.patch
+      run: |
+        git config --global user.email "sleepydog3@gmx.net"
+        git config --global user.name "sleepy dog"
+        cd openwrt && git am $PATCH_FILES/*.patch
 
     - name: Load custom configuration
       run: |

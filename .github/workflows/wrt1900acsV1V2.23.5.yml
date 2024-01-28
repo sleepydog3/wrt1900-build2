@@ -66,19 +66,6 @@ jobs:
         cd ..
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: Apply patches
-      run: |
-        git config --global user.email "sleepydog3@gmx.net"
-        git config --global user.name "sleepy dog"
-        ls -l .
-        ls -l configs
-        mkdir -p openwrt/$PATCH_FILES
-        mv $PATCH_FILES/*.patch openwrt/$PATCH_FILES
-        cd openwrt
-        git am $PATCH_FILES/*.patch
-        rm -rf $PATCH_FILES
-        cd ..
-
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
@@ -89,6 +76,17 @@ jobs:
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+
+    - name: Apply patches
+      run: |
+        git config --global user.email "sleepydog3@gmx.net"
+        git config --global user.name "sleepy dog"
+        mkdir -p openwrt/$PATCH_FILES
+        mv $PATCH_FILES/*.patch openwrt/$PATCH_FILES
+        cd openwrt
+        git am $PATCH_FILES/*.patch
+        rm -rf $PATCH_FILES
+        cd ..
 
     - name: Download package
       id: package

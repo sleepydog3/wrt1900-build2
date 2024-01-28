@@ -72,7 +72,7 @@ jobs:
         git config --global user.name "sleepy dog"
         ls -l .
         ls -l configs
-        mkdir openwrt/patches
+        mkdir -p openwrt/$PATCH_FILES
         mv $PATCH_FILES/*.patch openwrt/$PATCH_FILES
         cd openwrt
         git am $PATCH_FILES/*.patch

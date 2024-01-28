@@ -71,8 +71,8 @@ jobs:
         [ -e files ] && mv files openwrt/files
         git config --global user.email "sleepydog3@gmx.net"
         git config --global user.name "sleepy dog"
-        cd openwrt
-        ls -l  configs
+        ls -l .
+        ls -l configs
         git am $PATCH_FILES/*.patch
 
 

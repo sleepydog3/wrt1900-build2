@@ -25,6 +25,7 @@ env:
   REPO_TAG: v23.05.0
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: configs/wrt1900acsTest.config
+  PATCH_FILES: configs/patches
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   UPLOAD_BIN_DIR: false
@@ -70,6 +71,9 @@ jobs:
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
+
+    - name: Apply patches
+      run: openwrt && git am $PATCH_FILES/*.patch
 
     - name: Load custom configuration
       run: |

@@ -66,18 +66,19 @@ jobs:
         cd ..
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
-
-    - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
-
     - name: Apply patches
       run: |
         git config --global user.email "sleepydog3@gmx.net"
         git config --global user.name "sleepy dog"
         cd openwrt
-        git am $PATCH_FILES/*.patch
+        git am $PATCH_FILES/0002-kernel-generic-5.15-config-hardening.patch
+
+
+    - name: Update feeds
+      run: cd openwrt && ./scripts/feeds update -a
+
+    - name: Install feeds
+      run: cd openwrt && ./scripts/feeds install -a
 
     - name: Load custom configuration
       run: |

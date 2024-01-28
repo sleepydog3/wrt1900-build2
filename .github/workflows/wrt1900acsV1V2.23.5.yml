@@ -73,7 +73,7 @@ jobs:
       run: cd openwrt && ./scripts/feeds install -a
 
     - name: Apply patches
-      run: openwrt && git am $PATCH_FILES/*.patch
+      run: cd openwrt && git am $PATCH_FILES/*.patch
 
     - name: Load custom configuration
       run: |

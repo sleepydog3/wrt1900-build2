@@ -68,6 +68,7 @@ jobs:
 
     - name: Apply patches
       run: |
+        [ -e files ] && mv files openwrt/files
         git config --global user.email "sleepydog3@gmx.net"
         git config --global user.name "sleepy dog"
         cd openwrt
@@ -82,7 +83,7 @@ jobs:
 
     - name: Load custom configuration
       run: |
-        [ -e files ] && mv files openwrt/files
+  #      [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
 
     - name: Download package

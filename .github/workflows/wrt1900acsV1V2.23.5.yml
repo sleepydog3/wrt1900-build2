@@ -72,7 +72,7 @@ jobs:
         git config --global user.email "sleepydog3@gmx.net"
         git config --global user.name "sleepy dog"
         cd openwrt
-        ls -l ..
+        ls -l files
         git am $PATCH_FILES/*.patch
 
 

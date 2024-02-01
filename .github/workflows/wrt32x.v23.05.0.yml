@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: wrt3200acm (Linksys Devices) vanilla
+name: wrt32x v23.05.0 Test
 
 on:
   repository_dispatch:
@@ -21,9 +21,10 @@ on:
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
-  REPO_BRANCH: openwrt-21.02
+  REPO_BRANCH: main
+  REPO_TAG: v23.05.0
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: configs/wrt3200acm.config
+  CONFIG_FILE: configs/wrt32xTest.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   UPLOAD_BIN_DIR: false
@@ -32,7 +33,7 @@ env:
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: false
   TZ: America/New_York
-
+  
 jobs:
   build:
     runs-on: ubuntu-20.04

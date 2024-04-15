@@ -22,7 +22,7 @@ on:
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
   REPO_BRANCH: main
-  REPO_TAG: v23.05.0
+  REPO_TAG: v23.05.3
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: configs/wrt3200acmTest.config
   PATCH_FILES: configs/patches
@@ -65,6 +65,7 @@ jobs:
         git checkout tags/$REPO_TAG
         cd ..
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        echo "cloned openwrt repo for tag $REPO_TAG"
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a

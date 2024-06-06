@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: wrt1900acs (Linksys Devices) 23.5
+name: ax3600 (Xiaomi Devices) 23.5
 
 on:
   repository_dispatch:

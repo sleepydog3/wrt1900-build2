@@ -1,159 +1,79 @@
-#
-# Copyright (c) 2019-2020 P3TERX <https://p3terx.com>
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
-# https://github.com/P3TERX/Actions-OpenWrt
-# Description: Build OpenWrt using GitHub Actions
-#
+name: Build IPQ807x NSS WiFi
 
-name: ax3600 (Xiaomi Devices) 23.5
-
-on:
-  repository_dispatch:
-  workflow_dispatch:
-    inputs:
-      ssh:
-        description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
+on: workflow_dispatch
 
 env:
-  REPO_URL: https://github.com/AgustinLorenzo/openwrt.git
-  REPO_BRANCH: main_nss
-  REPO_TAG: ipq807x-nsswifi-2024-05-15-1806
-  FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: configs/ax3600.config
-  PATCH_FILES: configs/patches
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
-  UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: false
-  UPLOAD_WETRANSFER: false
-  UPLOAD_RELEASE: false
-  TZ: America/New_York
+    CONFIG_FILE: configs/ax3600.config
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+    build:
+        name: Prepare and build IPQ807x NSS generic images
+        runs-on: self-hosted
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@main
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            
+            - name: Clone source code
+              working-directory: /workdir
+              run: |
+                
+                git clone $REPO_URL -b $REPO_BRANCH .
+                git checkout tags/$REPO_TAG
 
-    - name: Initialization environment
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-        sudo -E apt-get -qq update
-        sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
-        sudo -E apt-get -qq autoremove --purge
-        sudo -E apt-get -qq clean
-        sudo timedatectl set-timezone "$TZ"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
+            - name: Update and install feeds
+              run: |
+                ./scripts/feeds update -a
+                ./scripts/feeds install -a
 
-    - name: Clone source code
-      working-directory: /workdir
-      run: |
-        df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
-        cd openwrt
-        git checkout tags/$REPO_TAG
-        cd ..
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+            - name: Import full config for IPQ807x NSS Generic
+              run: |
+                mv $CONFIG_FILE openwrt/.config
 
-    - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
+            - name: QoL fixes on default config
+              run: |
+                mkdir -p files/etc/uci-defaults
+                cat > files/etc/uci-defaults/99-qol_fixes << EOF
+                uci set wireless.radio0.country='US'
+                uci set wireless.radio1.country='US'
+                uci set wireless.radio2.country='US'
+                uci set wireless.radio1.disabled=0
+                uci set wireless.radio2.disabled=0
+                uci set pbuf.opt.memory_profile=auto
+                uci set network.globals.packet_steering=0
+                uci set firewall.@defaults[0].flow_offloading=0
+                uci set ecm.@general[0].enable_bridge_filtering=0
+                uci commit
+                EOF
 
-    - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
+            - name: Download package sources
+              run: make download V=s
 
-    - name: Load custom configuration
-      run: |
-        [ -e files ] && mv files openwrt/files
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+            - name: Build tools
+              run: |
+                make tools/install -j$(nproc) V=s || \
+                make tools/install V=s
 
-    - name: Download package
-      id: package
-      run: |
-        cd openwrt
-        make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
+            - name: Build toolchain
+              run: |
+                make toolchain/install -j$(nproc) V=s || \
+                make toolchain/install V=s
 
-    - name: Compile the firmware
-      id: compile
-      run: |
-        cd openwrt
-        echo -e "$(nproc) thread compile"
-        make -j$(nproc) || make -j1 || make -j1 V=s
-        echo "::set-output name=status::success"
-        grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
-        [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
-        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+            - name: Build target images
+              run: |
+                make -j$(nproc) V=s || \
+                make V=s
 
-    - name: Check space usage
-      if: (!cancelled())
-      run: df -hT
+            - name: Get the current date
+              run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
 
-    - name: Upload bin directory
-      uses: actions/upload-artifact@main
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
-      with:
-        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: openwrt/bin
-
-    - name: Organize files
-      id: organize
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
-      run: |
-        cd openwrt/bin/targets/*/*
-        rm -rf packages
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "::set-output name=status::success"
-
-    - name: Upload firmware directory
-      uses: actions/upload-artifact@main
-      if: steps.organize.outputs.status == 'success' && !cancelled()
-      with:
-        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: ${{ env.FIRMWARE }}
-
-    - name: Generate release tag
-      id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      run: |
-        echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
-        touch release.txt
-        echo "::set-output name=status::success"
-
-    - name: Upload firmware to release
-      uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
-        files: ${{ env.FIRMWARE }}/*
-
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 1
-        keep_minimum_runs: 3
-
-    - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      with:
-        keep_latest: 3
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+            - name: Create a release
+              uses: "ncipollo/release-action@v1"
+              with:
+                name: "Updated prebuilt images (NSS-WiFi) ${{ env.NOW }}"
+                commit: "main_nss"
+                tag: "ipq807x-nsswifi-${{ env.NOW }}"
+                generateReleaseNotes: true
+                makeLatest: true
+                artifacts: bin/targets/qualcommax/ipq807x/*
+                token: "${{ secrets.GITHUB_TOKEN }}"

@@ -79,7 +79,7 @@ jobs:
     - name: QoL fixes on default config
       run: |
         mkdir -p openwrt/files/etc/uci-defaults
-        cat > files/etc/uci-defaults/99-qol_fixes << EOF
+        cat > openwrt/files/etc/uci-defaults/99-qol_fixes << EOF
         uci set wireless.radio0.country='US'
         uci set wireless.radio1.country='US'
         uci set wireless.radio2.country='US'

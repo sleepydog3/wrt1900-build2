@@ -77,20 +77,20 @@ jobs:
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
 
     - name: QoL fixes on default config
-        run: |
-          mkdir -p openwrt/files/etc/uci-defaults
-          cat > files/etc/uci-defaults/99-qol_fixes << EOF
-          uci set wireless.radio0.country='US'
-          uci set wireless.radio1.country='US'
-          uci set wireless.radio2.country='US'
-          uci set wireless.radio1.disabled=0
-          uci set wireless.radio2.disabled=0
-          uci set pbuf.opt.memory_profile=auto
-          uci set network.globals.packet_steering=0
-          uci set firewall.@defaults[0].flow_offloading=0
-          uci set ecm.@general[0].enable_bridge_filtering=0
-          uci commit
-          EOF
+      run: |
+        mkdir -p openwrt/files/etc/uci-defaults
+        cat > files/etc/uci-defaults/99-qol_fixes << EOF
+        uci set wireless.radio0.country='US'
+        uci set wireless.radio1.country='US'
+        uci set wireless.radio2.country='US'
+        uci set wireless.radio1.disabled=0
+        uci set wireless.radio2.disabled=0
+        uci set pbuf.opt.memory_profile=auto
+        uci set network.globals.packet_steering=0
+        uci set firewall.@defaults[0].flow_offloading=0
+        uci set ecm.@general[0].enable_bridge_filtering=0
+        uci commit
+        EOF
 
     - name: Download package sources
       run: |

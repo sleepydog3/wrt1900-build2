@@ -74,86 +74,57 @@ jobs:
 
     - name: Load custom configuration
       run: |
-        [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
 
-    - name: Download package
-      id: package
-      run: |
-        cd openwrt
-        make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
+    - name: QoL fixes on default config
+        run: |
+          mkdir -p openwrt/files/etc/uci-defaults
+          cat > files/etc/uci-defaults/99-qol_fixes << EOF
+          uci set wireless.radio0.country='US'
+          uci set wireless.radio1.country='US'
+          uci set wireless.radio2.country='US'
+          uci set wireless.radio1.disabled=0
+          uci set wireless.radio2.disabled=0
+          uci set pbuf.opt.memory_profile=auto
+          uci set network.globals.packet_steering=0
+          uci set firewall.@defaults[0].flow_offloading=0
+          uci set ecm.@general[0].enable_bridge_filtering=0
+          uci commit
+          EOF
 
-    - name: Compile the firmware
-      id: compile
-      run: |
-        cd openwrt
-        echo -e "$(nproc) thread compile"
-        make -j$(nproc) || make -j1 || make -j1 V=s
-        echo "::set-output name=status::success"
-        grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
-        [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
-        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+      - name: Download package sources
+        run: |
+          cd openwrt
+          make download V=s
 
-    - name: Check space usage
-      if: (!cancelled())
-      run: df -hT
+      - name: Build tools
+        run: |
+          cd openwrt
+          make tools/install -j$(nproc) V=s || \
+          make tools/install V=s
 
-    - name: Upload bin directory
-      uses: actions/upload-artifact@main
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
-      with:
-        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: openwrt/bin
+      - name: Build toolchain
+        run: |
+          cd openwrt
+          make toolchain/install -j$(nproc) V=s || \
+          make toolchain/install V=s
 
-    - name: Organize files
-      id: organize
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
-      run: |
-        cd openwrt/bin/targets/*/*
-        rm -rf packages
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "::set-output name=status::success"
+      - name: Build target images
+        run: |
+          cd openwrt
+          make -j$(nproc) V=s || \
+          make V=s
 
-    - name: Upload firmware directory
-      uses: actions/upload-artifact@main
-      if: steps.organize.outputs.status == 'success' && !cancelled()
-      with:
-        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: ${{ env.FIRMWARE }}
+      - name: Get the current date
+        run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
 
-    - name: Generate release tag
-      id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      run: |
-        echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
-        touch release.txt
-        echo "::set-output name=status::success"
-
-    - name: Upload firmware to release
-      uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
-        files: ${{ env.FIRMWARE }}/*
-
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 1
-        keep_minimum_runs: 3
-
-    - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      with:
-        keep_latest: 3
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      - name: Create a release
+        uses: "ncipollo/release-action@v1"
+        with:
+          name: "Updated prebuilt images (NSS-WiFi) ${{ env.NOW }}"
+          commit: "main_nss"
+          tag: "ipq807x-nsswifi-${{ env.NOW }}"
+          generateReleaseNotes: true
+          makeLatest: true
+          artifacts: bin/targets/qualcommax/ipq807x/*
+          token: "${{ secrets.GITHUB_TOKEN }}"

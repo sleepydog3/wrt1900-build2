@@ -78,8 +78,8 @@ jobs:
       - name: Apply NSS Status patch
         run: |
           ls -l custom_repo/${{ env.NSS_STATUS_PATCH }}
-          ls -l custom_repo/ax3600
-          ls -l custom_repo/ax3600/patches
+          ls -l custom_repo/configs/ax3600
+          ls -l custom_repo/confits/ax3600/patches
           mv custom_repo/${{ env.NSS_STATUS_PATCH }} feeds/luci/${{ env.NSS_STATUS_PATCH }}
           cd feeds/luci
           git apply ${{ env.NSS_STATUS_PATCH }}

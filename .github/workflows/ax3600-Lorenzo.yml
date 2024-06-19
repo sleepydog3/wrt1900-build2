@@ -72,16 +72,40 @@ jobs:
           make -j$(nproc) V=s || \
           make V=s
 
-      - name: Get the current date
-        run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
-
-      - name: Create a release
-        uses: "ncipollo/release-action@v1"
+     - name: Package output
+        run: tar -cvf ipq807xx-images.tar bin/targets/qualcommax/ipq807x
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          name: "Updated prebuilt images (NSS-WiFi) ${{ env.NOW }}"
-          commit: "main_nss"
-          tag: "ipq807x-nsswifi-${{ env.NOW }}"
-          generateReleaseNotes: true
-          makeLatest: true
-          artifacts: bin/targets/qualcommax/ipq807x/*
-          token: "${{ secrets.GITHUB_TOKEN }}"
+          name: ipq807x-images
+          path: ipq807xx-images.tar
+
+ release:
+    name: Create release
+    needs: [build, check_commits]
+    if: needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ipq807x-images
+      - name: Extract artifacts
+        run: tar xf ipq807xx-images.tar
+      - name: Get current date
+        run: echo "RELEASE_DATE=$(date +%F)" >> $GITHUB_ENV
+      - name: Create release
+        uses: softprops/action-gh-release@master
+        with:
+          files: bin/targets/qualcommax/ipq807x/*
+          tag_name: ${{ env.RELEASE_PREFIX }}-${{ env.RELEASE_DATE }}
+          name: Updated prebuilt images ${{ env.RELEASE_DATE }}
+          body: |
+            Updated prebuilt images for ${{ env.RELEASE_DATE }}
+      - name: Clean up old releases
+        uses: dev-drprasad/delete-older-releases@master
+        with:
+          keep_latest: 2
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

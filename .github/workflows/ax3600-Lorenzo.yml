@@ -72,11 +72,16 @@ jobs:
           make -j$(nproc) V=s || \
           make V=s
 
-     - name: Package output
-        run: tar -cvf ipq807xx-images.tar bin/targets/qualcommax/ipq807x
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ipq807x-images
-          path: ipq807xx-images.tar
+      - name: Get the current date
+        run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
 
+      - name: Create a release
+        uses: "ncipollo/release-action@v1"
+        with:
+          name: "Updated prebuilt images (NSS-WiFi) ${{ env.NOW }}"
+          commit: "main_nss"
+          tag: "ipq807x-nsswifi-${{ env.NOW }}"
+          generateReleaseNotes: true
+          makeLatest: true
+          artifacts: bin/targets/qualcommax/ipq807x/*
+          token: "${{ secrets.GITHUB_TOKEN }}"

@@ -80,7 +80,7 @@ jobs:
           name: ipq807x-images
           path: ipq807xx-images.tar
 
- release:
+  release:
     name: Create release
     needs: [build, check_commits]
     if: needs.build.result == 'success'

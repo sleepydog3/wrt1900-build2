@@ -1,4 +1,4 @@
-name: AX3800 Lorenzo
+name: banana pi r3
 
 on:
   repository_dispatch:

@@ -20,6 +20,7 @@ on:
 
 env:
   REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
+  REMOTE_REPOSITORY: openwrt/openwrt
   REPO_BRANCH: master
   REMOTE_TAG: v23.05.4
   BUILDROOT: ${{ github.workspace }}/openwrt

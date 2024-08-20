@@ -58,8 +58,7 @@ jobs:
         with:
           repository: ${{ env.REMOTE_REPOSITORY }}
           ref: ${{ env.REMOTE_TAG }}
-#    - name: Checkout
-#      uses: actions/checkout@main
+
     - name: Auto select a specific code revision
       id: autoselect
       if: github.event.client_payload.version == 'stable'

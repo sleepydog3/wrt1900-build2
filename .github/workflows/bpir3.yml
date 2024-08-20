@@ -55,14 +55,11 @@ jobs:
         remove-codeql: true
         remove-docker-images: true
 
-    - name: Checkout remote repository
-      uses: actions/checkout@v4
-      with:
-        repository: ${{ env.REMOTE_REPOSITORY }}
-        ref: ${{ env.REMOTE_TAG }}
-
     - name: Switch to Checkout main
       uses: actions/checkout@main
+
+    - name: Download the sources
+      run: git clone --branch $REMOTE_TAG $REPO_URL
 
     - name: Auto select a specific code revision
       id: autoselect

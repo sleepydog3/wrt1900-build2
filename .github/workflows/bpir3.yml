@@ -54,10 +54,10 @@ jobs:
         remove-docker-images: true
 
     - name: Checkout remote repository
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.REMOTE_REPOSITORY }}
-          ref: ${{ env.REMOTE_TAG }}
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ env.REMOTE_REPOSITORY }}
+        ref: ${{ env.REMOTE_TAG }}
 
     - name: Auto select a specific code revision
       id: autoselect

@@ -27,6 +27,7 @@ env:
   CUSTOM_FEEDS_SH: ${{ github.workspace }}/custom-feeds.sh
   CUSTOM_PACKAGES_SH: ${{ github.workspace }}/custom-packages.sh
   CUSTOM_CONFIG_SH: ${{ github.workspace }}/custom-config.sh
+  CONFIG_FILE: ${{ github.workspace }}/configs/bpir3.config
   TZ: Asia/Shanghai
 
 jobs:
@@ -72,7 +73,7 @@ jobs:
       run: |
         cd $BUILDROOT && git checkout ${{ github.event.inputs.version }}
         echo "status=success" >> $GITHUB_OUTPUT
-
+        
     - name: Load custom
       run: |
         chmod +x custom-*.sh
@@ -80,6 +81,11 @@ jobs:
         $BUILDROOT/scripts/feeds update -a && $BUILDROOT/scripts/feeds install -a
         $CUSTOM_PACKAGES_SH
         $CUSTOM_CONFIG_SH
+
+    - name: Configure firmware image
+      run: |
+        mv ${{ env.CONFIG_FILE }} .config
+        make defconfig -j$(nproc)
 
     - name: Start SSH via tmate
       uses: rdp-studio/ssh2actions@main

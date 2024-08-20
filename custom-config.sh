@@ -29,3 +29,8 @@
 #echo 'CONFIG_PACKAGE_luci-ssl=y' >> $BUILDROOT/.config
 #echo 'CONFIG_PACKAGE_luci-app-aria2=y' >> $BUILDROOT/.config
 #echo 'CONFIG_PACKAGE_luci-app-samba4=y' >> $BUILDROOT/.config
+
+# Add luci-theme-argon
+echo 'CONFIG_PACKAGE_luci-theme-argon=y' >> $BUILDROOT/.config
+# ..and the config
+echo 'CONFIG_PACKAGE_luci-app-argon-config=y' >> $BUILDROOT/.config

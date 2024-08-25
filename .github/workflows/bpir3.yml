@@ -82,7 +82,7 @@ jobs:
 
     - name: Load custom
       run: |
-        chmod +x custom-*.sh
+        chmod +x bpir3-scripts/custom-*.sh
         $CUSTOM_FEEDS_SH
         $BUILDROOT/scripts/feeds update -a && $BUILDROOT/scripts/feeds install -a
         $CUSTOM_PACKAGES_SH

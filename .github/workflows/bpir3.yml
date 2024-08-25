@@ -26,9 +26,9 @@ env:
   BUILDROOT: ${{ github.workspace }}/openwrt
   DEPENDENCIES: ${{ github.workspace }}/dependencies-ubuntu.txt
   CUSTOM_SCRIPTS_FOLDER: bpir3-scripts
-  CUSTOM_FEEDS_SH: ${{ github.workspace }}/$CUSTOM_SCRIPTS_FOLDER/custom-feeds.sh
-  CUSTOM_PACKAGES_SH: ${{ github.workspace }}/$CUSTOM_SCRIPTS_FOLDER/custom-packages.sh
-  CUSTOM_CONFIG_SH: ${{ github.workspace }}/$CUSTOM_SCRIPTS_FOLDER/custom-config.sh
+  CUSTOM_FEEDS_SH: ${{ github.workspace }}/${{CUSTOM_SCRIPTS_FOLDER}}/custom-feeds.sh
+  CUSTOM_PACKAGES_SH: ${{ github.workspace }}/${{CUSTOM_SCRIPTS_FOLDER}}/custom-packages.sh
+  CUSTOM_CONFIG_SH: ${{ github.workspace }}/${{CUSTOM_SCRIPTS_FOLDER}}/custom-config.sh
   CONFIG_FILE: ${{ github.workspace }}/configs/bpir3.config
   TZ: Asia/Shanghai
 

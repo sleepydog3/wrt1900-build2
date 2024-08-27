@@ -24,7 +24,7 @@ env:
   REPO_BRANCH: master
   REMOTE_TAG: v23.05.4
   BUILDROOT: ${{ github.workspace }}/openwrt
-  DEPENDENCIES: ${{ github.workspace }}/dependencies-ubuntu.txt
+  DEPENDENCIES: ${{ github.workspace }}/bpir3-scripts/dependencies-ubuntu.txt
   CUSTOM_FEEDS_SH: ${{ github.workspace }}/bpir3-scripts/custom-feeds.sh
   CUSTOM_PACKAGES_SH: ${{ github.workspace }}/bpir3-scripts/custom-packages.sh
   CUSTOM_CONFIG_SH: ${{ github.workspace }}/bpir3-scripts/custom-config.sh

@@ -80,15 +80,6 @@ jobs:
         cd $BUILDROOT && mv ${{ env.CONFIG_FILE }} .config
 #        make defconfig -j$(nproc)
 
-    - name: Download package, defconfig, downlad,...
-      id: package
-      run: |
-        cd $BUILDROOT 
-        make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
-
     - name: Load custom
       run: |
         chmod +x bpir3-scripts/custom-*.sh
@@ -96,6 +87,15 @@ jobs:
         $BUILDROOT/scripts/feeds update -a && $BUILDROOT/scripts/feeds install -a
         $CUSTOM_PACKAGES_SH
         $CUSTOM_CONFIG_SH
+
+    - name: Download package, defconfig, downlad,...
+      id: package
+      run: |
+        cd $BUILDROOT
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
 
     - name: Start SSH via tmate
       uses: rdp-studio/ssh2actions@main

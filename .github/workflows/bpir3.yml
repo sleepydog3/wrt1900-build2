@@ -78,7 +78,16 @@ jobs:
     - name: Configure firmware image
       run: |
         cd $BUILDROOT && mv ${{ env.CONFIG_FILE }} .config
-        make defconfig -j$(nproc)
+#        make defconfig -j$(nproc)
+
+    - name: Download package, defconfig, downlad,...
+      id: package
+      run: |
+        cd $BUILDROOT 
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
 
     - name: Load custom
       run: |

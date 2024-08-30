@@ -20,7 +20,7 @@ env:
   REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
   REPO_BRANCH: v23.05.4
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: configs/bpir3.config
+  CONFIG_FILE: ${{ github.workspace }}/configs/bpir3.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   UPLOAD_BIN_DIR: false
@@ -30,6 +30,7 @@ env:
   CUSTOM_PACKAGES_SH: ${{ github.workspace }}/bpir3-scripts/custom-packages.sh
   CUSTOM_CONFIG_SH: ${{ github.workspace }}/bpir3-scripts/custom-config.sh
   TZ: Europe/Vienna
+  BUILDROOT: ${{ github.workspace }}/openwrt
 
 jobs:
   build:
@@ -58,7 +59,7 @@ jobs:
       run: |
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        ln -sf /workdir/openwrt $BUILDROOT
 
     #- name: Load custom feeds
     #  run: |
@@ -68,15 +69,23 @@ jobs:
     #    $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
+      run: cd $BUILDROOT && ./scripts/feeds update -a
 
     - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
+      run: cd $BUILDROOT && ./scripts/feeds install -a
+
+    - name: Load configuration
+      run: |
+        [ -e files ] && mv files openwrt/files
+      #  [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        cd $BUILDROOT && mv ${{ env.CONFIG_FILE }} .config
+        ls -l .config
+      #  chmod +x $DIY_P2_SH
+      #  cd openwrt
+      #  $GITHUB_WORKSPACE/$DIY_P2_SH
 
     - name: Load custom configuration
       run: |
-        [ -e files ] && mv files openwrt/files
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x bpir3-scripts/custom-*.sh
         $CUSTOM_PACKAGES_SH
         $CUSTOM_CONFIG_SH
@@ -84,10 +93,11 @@ jobs:
       #  cd openwrt
       #  $GITHUB_WORKSPACE/$DIY_P2_SH
 
+
     - name: Download package
       id: package
       run: |
-        cd openwrt
+        cd $BUILDROOT
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;

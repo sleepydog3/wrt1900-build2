@@ -26,6 +26,9 @@ env:
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
+  CUSTOM_FEEDS_SH: ${{ github.workspace }}/bpir3-scripts/custom-feeds.sh
+  CUSTOM_PACKAGES_SH: ${{ github.workspace }}/bpir3-scripts/custom-packages.sh
+  CUSTOM_CONFIG_SH: ${{ github.workspace }}/bpir3-scripts/custom-config.sh
   TZ: Europe/Vienna
 
 jobs:
@@ -74,6 +77,9 @@ jobs:
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x bpir3-scripts/custom-*.sh
+        $CUSTOM_PACKAGES_SH
+        $CUSTOM_CONFIG_SH
       #  chmod +x $DIY_P2_SH
       #  cd openwrt
       #  $GITHUB_WORKSPACE/$DIY_P2_SH

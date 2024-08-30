@@ -34,7 +34,9 @@
 echo 'CONFIG_PACKAGE_luci-theme-argon=y' >> $BUILDROOT/.config
 # ..and the config
 echo 'CONFIG_PACKAGE_luci-app-argon-config=y' >> $BUILDROOT/.config
+cat $BUILDROOT/.config
 
 # Add redirect to https
 
-sed -i 's/redirect_https\s*0/redirect_https   1/g' $BUILDROOT/package/network/services/uhttpd/files/uhttpd.config 
+sed -i 's/redirect_https\s*0/redirect_https   1/g' $BUILDROOT/package/network/services/uhttpd/files/uhttpd.config
+cat $BUILDROOT/package/network/services/uhttpd/files/uhttpd.config

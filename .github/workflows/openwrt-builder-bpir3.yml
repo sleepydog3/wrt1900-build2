@@ -74,6 +74,18 @@ jobs:
     - name: Install feeds
       run: cd $BUILDROOT && ./scripts/feeds install -a
 
+    - name: Load configuration
+      run: |
+        [ -e files ] && mv files openwrt/files
+        cd $BUILDROOT && mv ${{ env.CONFIG_FILE }} .config
+        ls -l .config
+
+    - name: Load custom configuration
+      run: |
+        chmod +x bpir3-scripts/custom-*.sh
+        $CUSTOM_PACKAGES_SH
+        $CUSTOM_CONFIG_SH
+    
     - name: Download package
       id: package
       run: |

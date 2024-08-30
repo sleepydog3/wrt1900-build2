@@ -74,25 +74,6 @@ jobs:
     - name: Install feeds
       run: cd $BUILDROOT && ./scripts/feeds install -a
 
-    - name: Load configuration
-      run: |
-        [ -e files ] && mv files openwrt/files
-      #  [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        cd $BUILDROOT && mv ${{ env.CONFIG_FILE }} .config
-        ls -l .config
-      #  chmod +x $DIY_P2_SH
-      #  cd openwrt
-      #  $GITHUB_WORKSPACE/$DIY_P2_SH
-
-    - name: Load custom configuration
-      run: |
-        chmod +x bpir3-scripts/custom-*.sh
-        $CUSTOM_PACKAGES_SH
-        $CUSTOM_CONFIG_SH
-      #  chmod +x $DIY_P2_SH
-      #  cd openwrt
-      #  $GITHUB_WORKSPACE/$DIY_P2_SH
-    
     - name: Download package
       id: package
       run: |

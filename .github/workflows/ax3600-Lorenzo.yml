@@ -1,4 +1,4 @@
-name: AX3800 Lorenzo
+name: z delete AX3800 Lorenzo
 
 on:
   repository_dispatch:

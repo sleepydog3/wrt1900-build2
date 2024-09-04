@@ -1,4 +1,4 @@
-name: AX3800
+name: z_delete_AX3800
 
 on:
   repository_dispatch:

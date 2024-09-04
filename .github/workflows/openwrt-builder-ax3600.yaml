@@ -1,4 +1,4 @@
-name: Build OpenWrt for Xiaomi AX3600
+name: OpenWrt Builder for Xiaomi AX3600
 
 on:
   repository_dispatch:

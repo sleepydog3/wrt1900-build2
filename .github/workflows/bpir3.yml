@@ -1,4 +1,4 @@
-name: Build OpenWrt Banana Pi R3
+name: z delete Build OpenWrt Banana Pi R3
 
 on:
   repository_dispatch:

@@ -38,16 +38,16 @@ echo 'CONFIG_PACKAGE_luci-app-argon-config=y' >> $BUILDROOT/.config
 #cat $BUILDROOT/.config
 
 # Add luci-theme-infinityfreedom
-echo ">> adding luci-theme-infinityfreedom"
-echo 'CONFIG_PACKAGE_luci-theme-infinityfreedom=y' >> $BUILDROOT/.config
+#echo ">> adding luci-theme-infinityfreedom"
+#echo 'CONFIG_PACKAGE_luci-theme-infinityfreedom=y' >> $BUILDROOT/.config
 
 # Add luci-theme-atmaterial
-echo ">> adding luci-theme-atmaterial"
-echo 'CONFIG_PACKAGE_luci-theme-atmaterial=y' >> $BUILDROOT/.config
+#echo ">> adding luci-theme-atmaterial"
+#echo 'CONFIG_PACKAGE_luci-theme-atmaterial=y' >> $BUILDROOT/.config
 
 # Add luci-theme-opentomcat
-echo ">> adding luci-theme-opentomcat"
-echo 'CONFIG_PACKAGE_luci-theme-opentomcat=y' >> $BUILDROOT/.config
+#echo ">> adding luci-theme-opentomcat"
+#echo 'CONFIG_PACKAGE_luci-theme-opentomcat=y' >> $BUILDROOT/.config
 
 # Add netdata
 echo ">> adding luci-app-netdata"

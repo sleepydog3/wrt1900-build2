@@ -14,4 +14,5 @@ git clone https://github.com/jerrykuku/luci-app-argon-config.git $BUILDROOT/pack
 #git clone https://github.com/openwrt-develop/luci-theme-atmaterial.git  $BUILDROOT/package/luci-theme-atmaterial
 
 # netdata
-git clone https://github.com/sirpdboy/luci-app-netdata.git  $BUILDROOT/package/luci-app-netdata
+#git clone https://github.com/sirpdboy/luci-app-netdata.git  $BUILDROOT/package/luci-app-netdata
+git clone https://github.com/muink/luci-app-netdata.git $BUILDROOT/package/luci-app-netdata

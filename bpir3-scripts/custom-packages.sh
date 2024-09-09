@@ -16,3 +16,4 @@ git clone https://github.com/jerrykuku/luci-app-argon-config.git $BUILDROOT/pack
 # netdata
 #git clone https://github.com/sirpdboy/luci-app-netdata.git  $BUILDROOT/package/luci-app-netdata
 git clone https://github.com/muink/luci-app-netdata.git $BUILDROOT/package/luci-app-netdata
+git clone https://github.com/muink/openwrt-netdata-ssl.git $BUILDROOT/package/netdata-ssl

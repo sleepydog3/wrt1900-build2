@@ -50,9 +50,9 @@ echo 'CONFIG_PACKAGE_luci-app-argon-config=y' >> $BUILDROOT/.config
 #echo 'CONFIG_PACKAGE_luci-theme-opentomcat=y' >> $BUILDROOT/.config
 
 # Add netdata
-echo ">> adding netdata-ssl luci-app-netdata"
-echo 'CONFIG_PACKAGE_luci-app-netdata=y' >> $BUILDROOT/.config
-echo 'CONFIG_PACKAGE_netdata-ssl=y' >> $BUILDROOT/.config
+#echo ">> adding netdata-ssl luci-app-netdata"
+#echo 'CONFIG_PACKAGE_luci-app-netdata=y' >> $BUILDROOT/.config
+#echo 'CONFIG_PACKAGE_netdata-ssl=y' >> $BUILDROOT/.config
 
 # Add redirect to https
 echo ">> adding redirect to https"

@@ -16,6 +16,8 @@ env:
   RELEASE_PREFIX: qualcommax-6.x-nss-wifi
   NSS_PACKAGES_REPOSITORY: qosmio/nss-packages
   NSS_PACKAGES_REPOSITORY_BRANCH: NSS-12.5-K6.x
+  CUSTOM_PACKAGES_SH: ${{ github.workspace }}/bpir3-scripts/custom-packages.sh
+  CUSTOM_CONFIG_SH: ${{ github.workspace }}/bpir3-scripts/custom-config.sh
 
 jobs:
   build:
@@ -44,9 +46,12 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Configure firmware image
+      - name: Configure firmware image and load custom configuration
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config
+          chmod +x bpir3-scripts/custom-*.sh
+          $CUSTOM_PACKAGES_SH
+          $CUSTOM_CONFIG_SH
           make defconfig -j$(nproc)
       - name: Include custom files
         run: |

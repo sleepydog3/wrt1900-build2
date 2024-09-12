@@ -18,7 +18,7 @@ env:
   NSS_PACKAGES_REPOSITORY_BRANCH: NSS-12.5-K6.x
   CUSTOM_PACKAGES_SH: ${{ github.workspace }}/custom_repo/bpir3-scripts/custom-packages.sh
   CUSTOM_CONFIG_SH: ${{ github.workspace }}/custom_repo/bpir3-scripts/custom-config.sh
-  BUILDROOT:.
+  BUILDROOT: 
 
 jobs:
   build:

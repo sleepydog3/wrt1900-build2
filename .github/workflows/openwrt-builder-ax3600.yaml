@@ -18,7 +18,7 @@ env:
   NSS_PACKAGES_REPOSITORY_BRANCH: NSS-12.5-K6.x
   CUSTOM_PACKAGES_SH: ${{ github.workspace }}/custom_repo/bpir3-scripts/custom-packages.sh
   CUSTOM_CONFIG_SH: ${{ github.workspace }}/custom_repo/bpir3-scripts/custom-config.sh
-  BUILDROOT: ${{ github.workspace }}/custom_repo
+  BUILDROOT:.
 
 jobs:
   build:
@@ -51,7 +51,7 @@ jobs:
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config
           find .
-          chmod +x $BUILDROOT/bpir3-scripts/custom-*.sh
+          chmod +x custom_repo/bpir3-scripts/custom-*.sh
           $CUSTOM_PACKAGES_SH
           $CUSTOM_CONFIG_SH
           make defconfig -j$(nproc)

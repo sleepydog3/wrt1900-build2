@@ -63,7 +63,8 @@ echo ">> Apply MediaTek OpenWrt files and patches"
 cp -af $BUILDROOT/feeds/mtk_openwrt_feed/master/files/* $BUILDROOT/
 ls -l $BUILDROOT/
 echo ">> >>"
-for file in $(find $BUILDROOT/feeds/mtk_openwrt_feed/master/patches-base -name "*.patch" | sort); do 
+cd $BUILDROOT
+for file in $(find feeds/mtk_openwrt_feed/master/patches-base -name "*.patch" | sort); do 
     echo ">> >> patching $file"
     ls -l $file
     patch -f -p1 -i ${file}; 

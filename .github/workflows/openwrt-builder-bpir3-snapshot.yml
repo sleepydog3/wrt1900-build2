@@ -72,7 +72,7 @@ jobs:
       run: |
         chmod +x bpir3-scripts/custom-*.sh
         $CUSTOM_FEEDS_SH
-    
+
     - name: Update feeds
       run: cd $BUILDROOT && ./scripts/feeds update -a
 

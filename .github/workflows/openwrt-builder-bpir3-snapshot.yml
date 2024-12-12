@@ -70,7 +70,7 @@ jobs:
 
     - name: Load custom feeds
       run: |
-        cd $BUILDROOT 
+  #      cd $BUILDROOT 
         ls -la
         chmod +x bpir3-scripts/custom-*.sh
         $CUSTOM_FEEDS_SH

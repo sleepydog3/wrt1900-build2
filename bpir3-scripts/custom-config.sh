@@ -60,10 +60,10 @@ sed -i 's/redirect_https\s*0/redirect_https   1/g' $BUILDROOT/package/network/se
 
 # Apply MediaTek OpenWrt files and patches
 echo ">> Apply MediaTek OpenWrt files and patches"
-cp -af $BUILDROOT/feeds/mtk_openwrt_feed/master/files/* .
-ls -l $BUILDROOT/feeds/mtk_openwrt_feed/master/files/*
-for file in $(find $BUILDROOT/feeds/mtk_openwrt_feed/master/patches-base -name "*.patch" | sort); do 
-    echo ">> >> patchin $file"
+cp -af $BUILDROOT/feeds/mtk-openwrt-feed/master/files/* .
+ls -l $BUILDROOT/feeds/mtk-openwrt-feed/master/files/*
+for file in $(find $BUILDROOT/feeds/mtk-openwrt-feed/master/patches-base -name "*.patch" | sort); do 
+    echo ">> >> patching $file"
     ls -l $file
     patch -f -p1 -i ${file}; 
 done

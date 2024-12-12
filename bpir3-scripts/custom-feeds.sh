@@ -6,4 +6,5 @@
 #echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >> $BUILDROOT/feeds.conf.default
 
 # Add MediaTek OpenWrt feed
-echo "src-git mtk_openwrt_feed https://git01.mediatek.com/openwrt/feeds/mtk-openwrt-feeds" >> feeds.conf.default
+echo "Adding MediaTek OpenWrt feed"
+echo "src-git mtk_openwrt_feed https://git01.mediatek.com/openwrt/feeds/mtk-openwrt-feeds" >> $BUILDROOT/feeds.conf.default

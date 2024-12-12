@@ -10,7 +10,7 @@
 # See /LICENSE for more information.
 #
 
-name: OpenWrt Builder for bpir3 stable
+name: OpenWrt Builder for bpir3 snap
 
 on:
   repository_dispatch:
@@ -18,7 +18,7 @@ on:
 
 env:
   REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
-  REPO_BRANCH: v23.05.5
+  REPO_BRANCH: main
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: ${{ github.workspace }}/configs/bpir3.config
   DIY_P1_SH: diy-part1.sh
@@ -68,6 +68,11 @@ jobs:
     #    cd openwrt
     #    $GITHUB_WORKSPACE/$DIY_P1_SH
 
+    - name: Load custom feeds
+      run: |
+        chmod +x bpir3-scripts/custom-*.sh
+        $CUSTOM_FEEDS_SH
+    
     - name: Update feeds
       run: cd $BUILDROOT && ./scripts/feeds update -a
 

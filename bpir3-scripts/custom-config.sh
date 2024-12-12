@@ -57,3 +57,7 @@ echo 'CONFIG_PACKAGE_luci-app-argon-config=y' >> $BUILDROOT/.config
 # Add redirect to https
 echo ">> adding redirect to https"
 sed -i 's/redirect_https\s*0/redirect_https   1/g' $BUILDROOT/package/network/services/uhttpd/files/uhttpd.config
+
+# Apply MediaTek OpenWrt files and patches
+cp -af $BUILDROOT/feeds/mtk_openwrt_feed/master/files/* .
+for file in $(find $BUILDROOT/feeds/mtk_openwrt_feed/master/patches-base -name "*.patch" | sort); do patch -f -p1 -i ${file}; done

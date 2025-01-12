@@ -59,13 +59,13 @@ echo ">> adding redirect to https"
 sed -i 's/redirect_https\s*0/redirect_https   1/g' $BUILDROOT/package/network/services/uhttpd/files/uhttpd.config
 
 # Apply MediaTek OpenWrt files and patches
-echo ">> Apply MediaTek OpenWrt files and patches"
-cp -af $BUILDROOT/feeds/mtk_openwrt_feed/master/files/* $BUILDROOT/
-ls -l $BUILDROOT/
-echo ">> >>"
-cd $BUILDROOT
-for file in $(find feeds/mtk_openwrt_feed/master/patches-base -name "*.patch" | sort); do 
-    echo ">> >> patching $file"
-    ls -l $file
-    patch -f -p1 -i ${file}; 
-done
+echo ">> Apply MediaTek OpenWrt files and patches => commented"
+#cp -af $BUILDROOT/feeds/mtk_openwrt_feed/master/files/* $BUILDROOT/
+#ls -l $BUILDROOT/
+#echo ">> >>"
+#cd $BUILDROOT
+#for file in $(find feeds/mtk_openwrt_feed/master/patches-base -name "*.patch" | sort); do 
+#    echo ">> >> patching $file"
+#    ls -l $file
+#    patch -f -p1 -i ${file}; 
+#done
